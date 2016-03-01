@@ -3,7 +3,7 @@ require_relative 'helpers.rb'
 
 class Csv_File
 
-  attr_reader :name, :keys_with_datatype, :datas
+  attr_reader :name, :keys, :keys_with_datatype, :datas
 
   def initialize(file)
     @file = file

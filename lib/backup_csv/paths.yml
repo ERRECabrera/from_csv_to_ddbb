@@ -1,0 +1,3 @@
+path:
+  csv: "db/backup_csv/*.csv"
+  models: "app/models/*.rb"
