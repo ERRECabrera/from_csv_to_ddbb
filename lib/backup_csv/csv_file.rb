@@ -6,6 +6,7 @@ class Csv_File
   attr_reader :name, :keys, :keys_with_datatype, :datas
 
   def initialize(file)
+    @lang = 'es'
     @file = file
     @name = split_file_name(file)
     @csv = CSV.read(file, col_sep: ';')
@@ -18,9 +19,19 @@ class Csv_File
 
   def get_keys_from_csv_header
     header = @csv[0]
-    @keys = header.map do |key|
-      key.downcase.gsub(' ','_')
+    keys = []
+    chars = set_chars_to_change
+    header.map do |key|
+      chars.each {|c| key = key.downcase.gsub(c[0],c[1])}
+      keys << key
     end
+    return keys
+  end
+
+  def set_chars_to_change
+    chars_base = [[' ','_']]
+    es_chars = [['á','a'],['é','e'],['í','i'],['ó','o'],['ú','u']]
+    chars_to_change = (@lang == 'es')? chars_base + es_chars : chars_base
   end
 
   def get_data_rows
@@ -28,11 +39,21 @@ class Csv_File
     @csv.shift
     rows_datas = @csv
     rows_datas.each do |row|
-      row.each_with_index do |celd,index|
-        datas = {}
-        datas[@keys[index]] = celd
-        data_instances << datas
+      row_instance = []
+      datas = {}
+      row.each_with_index do |celd_data,index|
+        case return_type_of(celd_data)
+          when 'date'
+            date = celd_data.split('/')
+            datas[@keys[index]] = (@lang == 'es')? Date.new(('20'+date[2]).to_i,date[1].to_i,date[0].to_i) : nil
+          when 'boolean'
+            datas[@keys[index]] = (celd_data.downcase =~ /\As/)? true : false
+          else
+            datas[@keys[index]] = celd_data    
+        end
       end
+      row_instance << datas
+      data_instances << row_instance
     end
     return data_instances
   end
