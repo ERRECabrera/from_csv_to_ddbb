@@ -6,12 +6,12 @@
     "lib/backup_csv" files:
       - 'folder.rb' --> return files in a folder
       - 'csv_file.rb' --> return csv_file :name, :keys, :keys_with_datatype, :datas
-      - 'model_file.rb' --> now only add_presence_validation to model
+      - 'model_file.rb' --> add_presence_validation to model and create it
       - 'paths.yml' --> storage useful paths with csv_files and models(to check existence)
       - 'helpers.rb'
   
     "lib/":
-      - 'csv.rake' --> task to create_models and restor_datas from csv_file
+      - 'csv.rake' --> task to create_models and restore_datas from csv_file
 
 
 #### Comands to work:

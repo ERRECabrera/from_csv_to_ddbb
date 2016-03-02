@@ -16,12 +16,13 @@ namespace :csv do
       if !check_if_model_exist(csv.name,paths['path']['models'])
         attributes = ''
         keys = csv.keys
+        datatypes = csv.keys_with_datatype
         header_csv = csv.keys_with_datatype
         keys.each {|attribute| attributes += "#{attribute}:#{header_csv[attribute]} "}
         system "rails generate scaffold #{csv.name} #{attributes}"
         models = Folder.new(paths['path']['models']).load
         models.each do |model|
-          add_validation_presence_to(model,keys)
+          Model.new(datatypes).add_validation_presence_to(model)
         end
       else
         puts "> model #{csv.name} already exists!"
@@ -37,8 +38,13 @@ namespace :csv do
     csv_files.each do |file|
       csv = Csv_File.new(file)
       data_instances = csv.datas
-      binding.pry
-      data_instances.each {|data_instance| User.create(data_instance)}
+      data_instances.each_with_index do |data_instance,index|
+        if Model.new(nil,data_instance).create(csv.name)
+          puts "-Instance#{index} was saved!"
+        else
+          puts "-Instance#{index} was not saved!"
+        end
+      end
     end
   end
 
