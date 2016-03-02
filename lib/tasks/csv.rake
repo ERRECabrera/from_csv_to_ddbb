@@ -3,7 +3,7 @@ require 'pry'
 
 require_relative './../backup_csv/folder.rb'
 require_relative './../backup_csv/csv_file.rb'
-require_relative './../backup_csv/model_file.rb'
+require_relative './../backup_csv/model.rb'
 
 namespace :csv do
   desc "create models from csv backup files"
